@@ -125,6 +125,19 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p
 		h[(i << 2) + 3] = (unsigned char) (r[i] >> 0x00);
 }
 
+#if _need_sha1str
+static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) {
+	unsigned i;
+
+	for (i = 0; i < SHA1_SIZE; ++i) {
+		s[i * 2 + 0] = ((h[i] >> 4) < 10 ? '0' : 'W') + (h[i] >> 4);
+		s[i * 2 + 1] = ((h[i] & 15) < 10 ? '0' : 'W') + (h[i] & 15);
+	}
+
+	s[i] = 0;
+}
+#endif
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
