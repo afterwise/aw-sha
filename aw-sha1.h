@@ -27,8 +27,10 @@
 #include <string.h>
 
 #if _MSC_VER
+# define _sha1_unused __attribute__((__unused__))
 # define _sha1_restrict __restrict
 #else
+# define _sha1_unused
 # define _sha1_restrict __restrict__
 #endif
 
@@ -38,6 +40,7 @@
 extern "C" {
 #endif
 
+static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict w) _sha1_unused;
 static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict w) {
 	unsigned a = r[0];
 	unsigned b = r[1];
@@ -89,6 +92,7 @@ static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict 
 	r[4] += e;
 }
 
+static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p, size_t n) _sha1_unused;
 static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p, size_t n) {
 	size_t i = 0;
 	unsigned w[16], r[5] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
@@ -125,7 +129,7 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p
 		h[(i << 2) + 3] = (unsigned char) (r[i] >> 0x00);
 }
 
-#if _need_sha1str
+static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) _sha1_unused;
 static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) {
 	unsigned i;
 
@@ -136,7 +140,6 @@ static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SI
 
 	s[i] = 0;
 }
-#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
