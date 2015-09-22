@@ -26,12 +26,16 @@
 
 #include <string.h>
 
+#if __GNUC__
+# define _sha_unused __attribute__((__unused__))
+#elif _MSC_VER
+# define _sha_unused
+#endif
+
 #if _MSC_VER
-# define _sha1_unused __attribute__((__unused__))
-# define _sha1_restrict __restrict
+# define _sha_restrict __restrict
 #else
-# define _sha1_unused
-# define _sha1_restrict __restrict__
+# define _sha_restrict __restrict__
 #endif
 
 #define SHA1_SIZE 20
