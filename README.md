@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/afterwise/aw-sha.svg?branch=master)](https://travis-ci.org/afterwise/aw-sha) [![codecov.io](https://codecov.io/github/afterwise/aw-sha/coverage.svg?branch=master)](https://codecov.io/github/afterwise/aw-sha?branch=master)
