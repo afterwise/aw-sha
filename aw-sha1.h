@@ -1,6 +1,6 @@
 
 /*
-   Copyright (c) 2014 Malte Hildingsson, malte (at) afterwi.se
+   Copyright (c) 2014-2016 Malte Hildingsson, malte (at) afterwi.se
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,9 @@
 #include <string.h>
 
 #if __GNUC__
-# define _sha1_unused __attribute__((__unused__))
+# define _sha1_unused __attribute__((unused))
 #elif _MSC_VER
 # define _sha1_unused
-#endif
-
-#if _MSC_VER
-# define _sha1_restrict __restrict
-#else
-# define _sha1_restrict __restrict__
 #endif
 
 #define SHA1_SIZE 20
@@ -44,8 +38,8 @@
 extern "C" {
 #endif
 
-static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict w) _sha1_unused;
-static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict w) {
+_sha1_unused
+static inline void sha1mix(unsigned *__restrict r, unsigned *__restrict w) {
 	unsigned a = r[0];
 	unsigned b = r[1];
 	unsigned c = r[2];
@@ -67,22 +61,22 @@ static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict 
 		mix(d ^ (b & (c ^ d)), 0x5a827999);
 
 	for (; i < 20; ++i) {
-		w[i & 0xf] = rol(w[i + 13 & 0xf] ^ w[i + 8 & 0xf] ^ w[i + 2 & 0xf] ^ w[i & 0xf], 1);
+		w[i & 0xf] = rol(w[(i + 13) & 0xf] ^ w[(i + 8) & 0xf] ^ w[(i + 2) & 0xf] ^ w[i & 0xf], 1);
 		mix(d ^ (b & (c ^ d)), 0x5a827999);
 	}
 
 	for (; i < 40; ++i) {
-		w[i & 0xf] = rol(w[i + 13 & 0xf] ^ w[i + 8 & 0xf] ^ w[i + 2 & 0xf] ^ w[i & 0xf], 1);
+		w[i & 0xf] = rol(w[(i + 13) & 0xf] ^ w[(i + 8) & 0xf] ^ w[(i + 2) & 0xf] ^ w[i & 0xf], 1);
 		mix(b ^ c ^ d, 0x6ed9eba1);
 	}
 
 	for (; i < 60; ++i) {
-		w[i & 0xf] = rol(w[i + 13 & 0xf] ^ w[i + 8 & 0xf] ^ w[i + 2 & 0xf] ^ w[i & 0xf], 1);
+		w[i & 0xf] = rol(w[(i + 13) & 0xf] ^ w[(i + 8) & 0xf] ^ w[(i + 2) & 0xf] ^ w[i & 0xf], 1);
 		mix((b & c) | (d & (b | c)), 0x8f1bbcdc);
 	}
 
 	for (; i < 80; ++i) {
-		w[i & 0xf] = rol(w[i + 13 & 0xf] ^ w[i + 8 & 0xf] ^ w[i + 2 & 0xf] ^ w[i & 0xf], 1);
+		w[i & 0xf] = rol(w[(i + 13) & 0xf] ^ w[(i + 8) & 0xf] ^ w[(i + 2) & 0xf] ^ w[i & 0xf], 1);
 		mix(b ^ c ^ d, 0xca62c1d6);
 	}
 
@@ -96,8 +90,8 @@ static inline void sha1mix(unsigned *_sha1_restrict r, unsigned *_sha1_restrict 
 	r[4] += e;
 }
 
-static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p, size_t n) _sha1_unused;
-static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p, size_t n) {
+_sha1_unused
+static void sha1(unsigned char h[static SHA1_SIZE], const void *__restrict p, size_t n) {
 	size_t i = 0;
 	unsigned w[16], r[5] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
 
@@ -114,9 +108,9 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p
 	memset(w, 0, sizeof w);
 
 	for (; i < n; ++i)
-		w[i >> 2 & 0xf] |= ((const unsigned char *) p)[i] << ((3 ^ i & 3) << 3);
+		w[i >> 2 & 0xf] |= ((const unsigned char *) p)[i] << ((3 ^ (i & 3)) << 3);
 
-	w[i >> 2 & 0xf] |= 0x80 << ((3 ^ i & 3) << 3);
+	w[i >> 2 & 0xf] |= 0x80 << ((3 ^ (i & 3)) << 3);
 
 	if ((n & 0x3f) > 56) {
 		sha1mix(r, w);
@@ -133,7 +127,7 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *_sha1_restrict p
 		h[(i << 2) + 3] = (unsigned char) (r[i] >> 0x00);
 }
 
-static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) _sha1_unused;
+_sha1_unused
 static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) {
 	unsigned i;
 
@@ -141,8 +135,6 @@ static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SI
 		s[i * 2 + 0] = ((h[i] >> 4) < 10 ? '0' : 'W') + (h[i] >> 4);
 		s[i * 2 + 1] = ((h[i] & 15) < 10 ? '0' : 'W') + (h[i] & 15);
 	}
-
-	s[i] = 0;
 }
 
 #ifdef __cplusplus
