@@ -26,10 +26,18 @@
 
 #include <string.h>
 
-#if __GNUC__
+#ifdef _HAS_CXX17
+# define _sha1_unused [[maybe_unused]]
+#elif __GNUC__
 # define _sha1_unused __attribute__((unused))
 #elif _MSC_VER
 # define _sha1_unused
+#endif
+
+#ifdef __cplusplus
+# define _sha1_staticsize
+#else
+# define _sha1_staticsize static
 #endif
 
 #define SHA1_SIZE 20
@@ -91,7 +99,7 @@ static inline void sha1mix(unsigned *__restrict r, unsigned *__restrict w) {
 }
 
 _sha1_unused
-static void sha1(unsigned char h[static SHA1_SIZE], const void *__restrict p, size_t n) {
+static void sha1(unsigned char h[_sha1_staticsize SHA1_SIZE], const void *__restrict p, size_t n) {
 	size_t i = 0;
 	unsigned w[16], r[5] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
 
@@ -117,7 +125,7 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *__restrict p, si
 		memset(w, 0, sizeof w);
 	}
 
-	w[15] = n << 3;
+	w[15] = (unsigned) n << 3;
 	sha1mix(r, w);
 
 	for (i = 0; i < 5; ++i)
@@ -128,7 +136,7 @@ static void sha1(unsigned char h[static SHA1_SIZE], const void *__restrict p, si
 }
 
 _sha1_unused
-static void sha1str(char s[static SHA1_SIZE * 2], unsigned char h[static SHA1_SIZE]) {
+static void sha1str(char s[_sha1_staticsize SHA1_SIZE * 2], unsigned char h[_sha1_staticsize SHA1_SIZE]) {
 	unsigned i;
 
 	for (i = 0; i < SHA1_SIZE; ++i) {
