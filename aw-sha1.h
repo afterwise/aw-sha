@@ -27,11 +27,11 @@
 
 #include <string.h>
 
-#ifdef _HAS_CXX17
+#if defined(_HAS_CXX17)
 # define _sha1_unused [[maybe_unused]]
-#elif __GNUC__
+#elif defined(__GNUC__)
 # define _sha1_unused __attribute__((unused))
-#elif _MSC_VER
+#elif defined(_MSC_VER)
 # define _sha1_unused
 #endif
 
