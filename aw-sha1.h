@@ -121,7 +121,7 @@ static void sha1(unsigned char h[_sha1_staticsize SHA1_SIZE], const void *__rest
 
 	w[i >> 2 & 0xf] |= 0x80 << ((3 ^ (i & 3)) << 3);
 
-	if ((n & 0x3f) > 56) {
+	if ((n & 0x3f) >= 56) {
 		sha1mix(r, w);
 		memset(w, 0, sizeof w);
 	}
