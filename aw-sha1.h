@@ -126,6 +126,7 @@ static void sha1(unsigned char h[_sha1_staticsize SHA1_SIZE], const void *__rest
 		memset(w, 0, sizeof w);
 	}
 
+	w[14] = (unsigned) ((unsigned long long) n >> 29);
 	w[15] = (unsigned) n << 3;
 	sha1mix(r, w);
 
