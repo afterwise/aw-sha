@@ -106,10 +106,10 @@ static void sha1(unsigned char h[_sha1_staticsize SHA1_SIZE], const void *__rest
 
 	for (; i < (n & ~0x3f);) {
 		do w[i >> 2 & 0xf] =
-			((const unsigned char *) p)[i + 3] << 0x00 |
-			((const unsigned char *) p)[i + 2] << 0x08 |
-			((const unsigned char *) p)[i + 1] << 0x10 |
-			((const unsigned char *) p)[i + 0] << 0x18;
+			(unsigned) ((const unsigned char *) p)[i + 3] << 0x00 |
+			(unsigned) ((const unsigned char *) p)[i + 2] << 0x08 |
+			(unsigned) ((const unsigned char *) p)[i + 1] << 0x10 |
+			(unsigned) ((const unsigned char *) p)[i + 0] << 0x18;
 		while ((i += 4) & 0x3f);
 		sha1mix(r, w);
 	}
@@ -117,9 +117,9 @@ static void sha1(unsigned char h[_sha1_staticsize SHA1_SIZE], const void *__rest
 	memset(w, 0, sizeof w);
 
 	for (; i < n; ++i)
-		w[i >> 2 & 0xf] |= ((const unsigned char *) p)[i] << ((3 ^ (i & 3)) << 3);
+		w[i >> 2 & 0xf] |= (unsigned) ((const unsigned char *) p)[i] << ((3 ^ (i & 3)) << 3);
 
-	w[i >> 2 & 0xf] |= 0x80 << ((3 ^ (i & 3)) << 3);
+	w[i >> 2 & 0xf] |= 0x80u << ((3 ^ (i & 3)) << 3);
 
 	if ((n & 0x3f) >= 56) {
 		sha1mix(r, w);
