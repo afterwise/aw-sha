@@ -27,7 +27,7 @@
 
 #include <string.h>
 
-#if defined(_HAS_CXX17)
+#if defined(__cplusplus) && (__cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L))
 # define _sha1_unused [[maybe_unused]]
 #elif defined(__GNUC__)
 # define _sha1_unused __attribute__((unused))
@@ -35,7 +35,7 @@
 # define _sha1_unused
 #endif
 
-#ifdef __cplusplus
+#if defined(__cplusplus) || defined(_MSC_VER)
 # define _sha1_staticsize
 #else
 # define _sha1_staticsize static
